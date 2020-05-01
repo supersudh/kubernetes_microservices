@@ -1,0 +1,58 @@
+apiVersion: skaffold/v2alpha3
+kind: Config
+deploy:
+  kubectl:
+    manifests:
+      - ./infra/k8s/*
+build:
+  local:
+    push: false
+  artifacts:
+    - image: sudhrk/client
+      context: client
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "src/**/*.js" # Wont rebuild if files change, directly mutate code in the k8 pod container | Will rebuild if files outside src changes
+            dest: .
+    - image: sudhrk/comments
+      context: comments
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "*.js" # Wont rebuild if files change, directly mutate code in the k8 pod container | Will rebuild if files other than .js changes
+            dest: .
+    - image: sudhrk/event-bus
+      context: event-bus
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "*.js" # Wont rebuild if files change, directly mutate code in the k8 pod container | Will rebuild if files other than .js changes
+            dest: .
+    - image: sudhrk/moderation
+      context: moderation
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "*.js" # Wont rebuild if files change, directly mutate code in the k8 pod container | Will rebuild if files other than .js changes
+            dest: .
+    - image: sudhrk/posts
+      context: posts
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "*.js" # Wont rebuild if files change, directly mutate code in the k8 pod container | Will rebuild if files other than .js changes
+            dest: .
+    - image: sudhrk/query
+      context: query
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "*.js" # Wont rebuild if files change, directly mutate code in the k8 pod container | Will rebuild if files other than .js changes
+            dest: .
